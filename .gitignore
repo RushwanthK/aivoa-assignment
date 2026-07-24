@@ -1,0 +1,17 @@
+# Python
+aivoavenv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# Node
+node_modules/
+
+# Vite
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
