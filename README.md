@@ -128,7 +128,7 @@ source venv/bin/activate
 Windows
 
 ```bash
-venv\Scripts\activate
+venv\\Scripts\\activate
 ```
 
 Install dependencies
