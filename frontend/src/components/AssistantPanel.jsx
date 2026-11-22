@@ -24,6 +24,8 @@ import {
     chatCopilot,
 } from "../services/complaintService";
 
+import { getErrorMessage } from "../services/api";
+
 import {
     setComplaintData,
     updateFields,
@@ -48,7 +50,9 @@ export default function AssistantPanel() {
 
                 Upload a complaint PDF or paste a complaint email below.
 
-                I'll extract the complaint details, assess risk, and populate the complaint form automatically.`
+                I'll extract the complaint details, assess risk, and populate the complaint form automatically.
+
+                Note: this is a public demo. Please don't enter real patient or customer data.`
         }
     ]);
 
@@ -207,7 +211,7 @@ export default function AssistantPanel() {
 
             console.error(err);
 
-            alert("AI Assistant failed.");
+            alert(getErrorMessage(err, "AI Assistant failed."));
 
         }
 

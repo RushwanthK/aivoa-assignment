@@ -1,12 +1,6 @@
 import json
 
-from groq import Groq
-
-from app.config import GROQ_MODEL, settings
-
-client = Groq(
-    api_key=settings.GROQ_API_KEY
-)
+from app.services.groq_client import call_llm_json
 
 
 def generate_risk_assessment(complaint: dict):
@@ -73,20 +67,4 @@ Never explain.
 Only return JSON.
 """
 
-    response = client.chat.completions.create(
-        model=GROQ_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0
-    )
-
-    content = response.choices[0].message.content
-
-    content = content.replace("```json", "")
-    content = content.replace("```", "")
-
-    return json.loads(content)
+    return call_llm_json(prompt)

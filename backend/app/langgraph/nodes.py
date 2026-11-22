@@ -33,11 +33,9 @@ def risk_node(state: ComplaintState):
 
     complaint = state["complaint"]
 
-    complaint["severity"] = risk["severity"]
-    complaint["priority"] = risk["priority"]
-
-    complaint["risk_summary"] = risk["risk_summary"]
-    complaint["suggested_action"] = risk["suggested_action"]
+    # Keep the extraction's values if the risk step omits a field.
+    for field in ("severity", "priority", "risk_summary", "suggested_action"):
+        complaint[field] = risk.get(field) or complaint.get(field, "")
 
     return {
 

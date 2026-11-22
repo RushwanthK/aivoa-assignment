@@ -1,13 +1,7 @@
 import json
 
-from groq import Groq
+from app.services.groq_client import call_llm_json
 
-from app.config import GROQ_MODEL, settings
-
-
-client = Groq(
-    api_key=settings.GROQ_API_KEY
-)
 
 
 def extract_complaint_details(text: str):
@@ -67,23 +61,7 @@ Complaint:
 {text}
 """
 
-    response = client.chat.completions.create(
-        model=GROQ_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0
-    )
-
-    content = response.choices[0].message.content
-
-    content = content.replace("```json", "")
-    content = content.replace("```", "")
-
-    return json.loads(content)
+    return call_llm_json(prompt)
 
 def update_complaint_fields(message: str, current_data: dict):
 
@@ -122,20 +100,4 @@ Do not include explanations.
 Do not include code fences.
 """
 
-    response = client.chat.completions.create(
-        model=GROQ_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0
-    )
-
-    content = response.choices[0].message.content
-
-    content = content.replace("```json", "")
-    content = content.replace("```", "")
-
-    return json.loads(content)
+    return call_llm_json(prompt)

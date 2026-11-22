@@ -5,8 +5,11 @@ from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
 engine = create_engine(
-    settings.DATABASE_URL,
-    echo=True
+    settings.database_url,
+    echo=settings.DB_ECHO,
+    # Hosted Postgres (e.g. Supabase) closes idle connections; check before use.
+    pool_pre_ping=True,
+    pool_recycle=300,
 )
 
 SessionLocal = sessionmaker(

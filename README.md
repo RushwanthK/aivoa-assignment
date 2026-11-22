@@ -4,6 +4,8 @@ An AI-assisted Customer Complaint Management System developed as part of the AIV
 
 The application automates pharmaceutical complaint processing using Large Language Models (LLMs), LangGraph workflows, PDF parsing, and structured data extraction.
 
+> **Live demo:** _coming soon_ (see [DEPLOYMENT.md](DEPLOYMENT.md))
+
 ---
 
 ## Features
@@ -34,22 +36,32 @@ using an LLM-powered risk assessment workflow.
 - Save complaints into PostgreSQL
 - Reset complaint form
 
+### Production Hardening
+
+- Per-IP rate limiting on the AI endpoints (`slowapi`)
+- Input limits: complaint text length, PDF size, and field lengths matching the database columns
+- Groq JSON mode for reliable structured output, with clear error messages instead of server crashes
+- CORS origins, model name and limits configured through environment variables
+- Database connection health checks for hosted PostgreSQL (Supabase)
+
 ---
 
 ## Tech Stack
 
 ### Frontend
 
-- React
+- React 19 + Vite
 - Redux Toolkit
 - Material UI
+- Axios
 
 ### Backend
 
 - FastAPI
 - LangGraph
 - Groq LLM (`openai/gpt-oss-120b`)
-- PostgreSQL
+- SQLAlchemy + PostgreSQL
+- slowapi (rate limiting)
 
 ### PDF Processing
 
@@ -62,15 +74,26 @@ using an LLM-powered risk assessment workflow.
 ```
 frontend/
     src/
-        components/
-        redux/
-        services/
+        components/      UI: complaint form, AI copilot panel
+        pages/
+        redux/           complaint state
+        services/        API client (reads VITE_API_URL)
+    .env.example
 
 backend/
     app/
-        routers/
-        services/
-        langgraph/
+        routers/         /extract, /chat, /complaints
+        services/        Groq client, LLM prompts, PDF parsing
+        langgraph/       extraction → risk-assessment graph
+        models/          SQLAlchemy models
+        schemas/         request/response validation
+        config.py        settings from environment variables
+    requirements.txt
+    .env.example
+    .python-version
+
+render.yaml              Render blueprint for the backend
+DEPLOYMENT.md            Vercel + Render + Supabase guide
 ```
 
 ---
@@ -106,80 +129,99 @@ Complaint Form
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| POST | /extract/text | Extract complaint from pasted text |
-| POST | /extract/pdf | Extract complaint from uploaded PDF |
-| POST | /chat | AI Copilot field updates |
-| POST | /complaint | Save complaint |
+| POST | /extract/text | Extract complaint from pasted text (rate limited) |
+| POST | /extract/pdf | Extract complaint from uploaded PDF (rate limited, max 5 MB) |
+| POST | /chat | AI Copilot field updates (rate limited) |
+| POST | /complaints | Save complaint |
+| GET | /complaints | List the 100 most recent complaints |
+| GET | /health | Health check |
+
+Interactive API docs are available at `/docs` when the backend is running.
 
 ---
 
-## Installation
+## Running Locally
+
+### Prerequisites
+
+- Python 3.12
+- Node.js 20+
+- PostgreSQL (local, or a free Supabase project)
+- A Groq API key from https://console.groq.com
 
 ### Backend
 
 ```bash
 cd backend
-
 python -m venv venv
-
-source venv/bin/activate
 ```
 
-Windows
+Activate the virtual environment:
 
 ```bash
-venv\\Scripts\\activate
+# macOS / Linux
+source venv/bin/activate
+
+# Windows (PowerShell)
+venv\Scripts\activate
 ```
 
-Install dependencies
+Install dependencies and configure:
 
 ```bash
 pip install -r requirements.txt
+cp .env.example .env      # then fill in DATABASE_URL and GROQ_API_KEY
 ```
 
-Run
+Run:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
----
+The API runs at http://127.0.0.1:8000. The `complaints` table is created automatically on startup.
 
 ### Frontend
 
 ```bash
 cd frontend
-
 npm install
-
 npm run dev
 ```
 
----
-
-## Database
-
-Configure PostgreSQL in:
-
-```
-backend/app/database.py
-```
-
-Create the required database before running the backend.
+The app runs at http://localhost:5173 and calls the backend at `http://127.0.0.1:8000` by default. To point it elsewhere, create `frontend/.env.local` with `VITE_API_URL=...`.
 
 ---
 
 ## Environment Variables
 
-Create a `.env` inside backend.
+### Backend (`backend/.env`)
 
-Example
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `DATABASE_URL` | Yes | | PostgreSQL connection string |
+| `GROQ_API_KEY` | Yes | | Groq API key |
+| `GROQ_MODEL` | No | `openai/gpt-oss-120b` | LLM model |
+| `ALLOWED_ORIGINS` | No | `http://localhost:5173` | Comma-separated frontend URLs allowed by CORS |
+| `DB_ECHO` | No | `false` | Log SQL statements |
+| `RATE_LIMIT_AI` | No | `10/minute` | Per-IP limit on AI endpoints |
+| `MAX_TEXT_CHARS` | No | `10000` | Max complaint text length |
+| `MAX_PDF_MB` | No | `5` | Max PDF upload size |
 
-```
-GROQ_API_KEY=your_groq_key
+### Frontend
 
-DATABASE_URL=postgresql://username:password@localhost/database_name
-```
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | Backend URL, e.g. `https://your-backend.onrender.com` |
+
+Never commit real `.env` files; they are git-ignored.
+
+---
+
+## Deployment
+
+The app is designed for free hosting: **Vercel** (frontend), **Render** (backend) and **Supabase** (PostgreSQL).
+Step-by-step instructions are in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ---
 

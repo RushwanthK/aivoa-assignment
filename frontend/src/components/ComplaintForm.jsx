@@ -14,6 +14,7 @@ import {
 } from "../redux/complaintSlice";
 
 import { saveComplaint } from "../services/complaintService";
+import { getErrorMessage } from "../services/api";
 
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
@@ -87,7 +88,7 @@ export default function ComplaintForm() {
 
           console.error(err);
 
-          alert("Save failed.");
+          alert(getErrorMessage(err, "Save failed."));
 
       }
 

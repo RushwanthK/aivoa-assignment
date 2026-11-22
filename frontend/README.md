@@ -1,18 +1,31 @@
-# React + Vite
+# Frontend: AIVOA Complaint Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite + Redux Toolkit + Material UI.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+Opens at http://localhost:5173 and calls the backend at `http://127.0.0.1:8000`.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Configuration
 
-Note: This will impact Vite dev & build performances.
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | Backend URL. Set in `.env.local` locally, or in Vercel's environment variables for deployment. |
 
-## Expanding the ESLint configuration
+See `.env.example`. Vite bakes `VITE_*` values in at build time, so rebuild or redeploy after changing them.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Dev server with hot reload |
+| `npm run build` | Production build into `dist/` |
+| `npm run lint` | ESLint |
+| `npm run preview` | Serve the production build locally |
+
+See the [root README](../README.md) for the full project and [DEPLOYMENT.md](../DEPLOYMENT.md) for hosting.
