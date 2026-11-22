@@ -33,7 +33,7 @@ Create a key at https://console.groq.com/keys. The free tier is enough for a dem
 2. Render reads `render.yaml` and asks for the secret values:
    - `DATABASE_URL`: the Supabase string from step 1
    - `GROQ_API_KEY`: from step 2
-   - `ALLOWED_ORIGINS`: leave as `http://localhost:5173` for now; you'll update it after step 4
+   - `ALLOWED_ORIGINS`: enter `http://localhost:5173` for now; you'll update it after step 4
 3. Click **Apply**.
 
 ### Option B: Manual web service
@@ -81,6 +81,12 @@ ALLOWED_ORIGINS=https://aivoa-qms.vercel.app,http://localhost:5173
 ```
 
 Use your exact Vercel URL with no trailing slash. Save; Render redeploys automatically.
+
+Verify from a terminal (should print an `access-control-allow-origin` header, not "Disallowed CORS origin"):
+
+```bash
+curl -i -X OPTIONS https://<your-service>.onrender.com/extract/text \n  -H "Origin: https://aivoa-qms.vercel.app" -H "Access-Control-Request-Method: POST"
+```
 
 ---
 

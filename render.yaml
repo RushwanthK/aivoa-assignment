@@ -15,5 +15,7 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      # Set in the dashboard, e.g. "https://your-app.vercel.app,http://localhost:5173".
+      # sync: false so Blueprint syncs never overwrite it.
       - key: ALLOWED_ORIGINS
-        value: http://localhost:5173
+        sync: false
