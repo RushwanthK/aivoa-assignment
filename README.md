@@ -4,7 +4,7 @@ An AI-assisted Customer Complaint Management System developed as part of the AIV
 
 The application automates pharmaceutical complaint processing using Large Language Models (LLMs), LangGraph workflows, PDF parsing, and structured data extraction.
 
-> **Live demo:** _coming soon_ (see [DEPLOYMENT.md](DEPLOYMENT.md))
+> **Live demo:** https://aivoa-assignment-chi.vercel.app (the backend sleeps when idle, so the first request can take up to a minute)
 
 ---
 
