@@ -48,7 +48,7 @@ using an LLM-powered risk assessment workflow.
 
 - FastAPI
 - LangGraph
-- Groq LLM (Llama 3.3 70B Versatile)
+- Groq LLM (`openai/gpt-oss-120b`)
 - PostgreSQL
 
 ### PDF Processing

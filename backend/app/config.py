@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+GROQ_MODEL = "openai/gpt-oss-120b"
+
 
 class Settings(BaseSettings):
     DATABASE_URL: str

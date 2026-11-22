@@ -2,7 +2,7 @@ import json
 
 from groq import Groq
 
-from app.config import settings
+from app.config import GROQ_MODEL, settings
 
 
 client = Groq(
@@ -68,7 +68,7 @@ Complaint:
 """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=GROQ_MODEL,
         messages=[
             {
                 "role": "user",
@@ -123,7 +123,7 @@ Do not include code fences.
 """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=GROQ_MODEL,
         messages=[
             {
                 "role": "user",

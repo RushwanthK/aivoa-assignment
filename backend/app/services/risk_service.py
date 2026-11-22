@@ -2,7 +2,7 @@ import json
 
 from groq import Groq
 
-from app.config import settings
+from app.config import GROQ_MODEL, settings
 
 client = Groq(
     api_key=settings.GROQ_API_KEY
@@ -74,7 +74,7 @@ Only return JSON.
 """
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=GROQ_MODEL,
         messages=[
             {
                 "role": "user",
